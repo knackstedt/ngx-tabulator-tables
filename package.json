@@ -1,0 +1,32 @@
+{
+  "name": "ngx-tabulator-tables",
+  "version": "0.0.1",
+  "repository": {
+    "url": "https://github.com/knackstedt/ngx-tabulator-tables.git"
+  },
+  "scripts": {
+    "build": "ng build --project package",
+    "dev": "ng serve --project devel --port 4900 --ssl",
+    "dev:package": "ng build --project package --watch --configuration development"
+  },
+  "private": false,
+  "dependencies": {
+    "@angular/common": "^17.1.2",
+    "@angular/compiler": "^17.1.2",
+    "@angular/core": "^17.1.2",
+    "@angular/platform-browser": "^17.1.2",
+    "@angular/platform-browser-dynamic": "^17.1.2",
+    "rxjs": "~7.8.1",
+    "tabulator-tables": "^6.3.0",
+    "tslib": "^2.6.2",
+    "zone.js": "~0.14.3"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "^17.1.2",
+    "@angular/cli": "~17.1.2",
+    "@angular/compiler-cli": "^17.1.2",
+    "@types/tabulator-tables": "^6.2.3",
+    "ng-packagr": "^17.1.2",
+    "typescript": "~5.3.3"
+  }
+}

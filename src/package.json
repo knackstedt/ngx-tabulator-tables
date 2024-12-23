@@ -1,0 +1,34 @@
+{
+    "name": "ngx-tabulator-tables",
+    "version": "0.0.2",
+    "repository": {
+        "url": "https://github.com/knackstedt/ngx-tabulator-tables"
+    },
+    "license": "MIT",
+    "author": {
+        "email": "andrewk@vivaldi.net",
+        "name": "Andrew G. Knackstedt"
+    },
+    "description": "Angular wrapper for the popular Tabulator Tables library",
+    "keywords": [
+        "angular",
+        "ngx",
+        "tabulator",
+        "ng",
+        "angular-service"
+    ],
+    "peerDependencies": {
+        "@angular/common": ">=17.0.0",
+        "@angular/core": ">=17.0.0"
+    },
+    "dependencies": {
+        "@xyflow/react": ">=12.0.0",
+        "ngx-reactify": "^0.0.1",
+        "tabulator-tables": ">=6.0.0",
+        "tslib": ">=2.6.0"
+    },
+    "devDependencies": {
+        "@types/tabulator-tables": ">=6.0.0"
+    },
+    "sideEffects": false
+}

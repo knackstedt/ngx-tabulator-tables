@@ -1,0 +1,10 @@
+{
+    "$schema": "../node_modules/ng-packagr/ng-package.schema.json",
+    "dest": "../dist/tabulator",
+    "lib": {
+        "entryFile": "tabulator/public-api.ts"
+    },
+    "allowedNonPeerDependencies": [
+        "."
+    ]
+}

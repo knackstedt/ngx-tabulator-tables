@@ -1,0 +1,21 @@
+@if (isRendered) {
+
+    <ngx-tabulator
+        [dataSource]="data"
+    >
+        <ngx-tabulator-column field="id" title="id"/>
+        <ngx-tabulator-column field="name" title="name">
+            <ng-template let-data>
+                <div style="color: red">{{data.name}}</div>
+            </ng-template>
+
+        </ngx-tabulator-column>
+        <ngx-tabulator-column field="progress" title="progress"/>
+        <ngx-tabulator-column field="gender" title="gender"/>
+        <ngx-tabulator-column field="rating" title="rating"/>
+        <ngx-tabulator-column field="col" title="col"/>
+        <ngx-tabulator-column field="dob" title="dob"/>
+        <ngx-tabulator-column field="car" title="car"/>
+
+    </ngx-tabulator>
+}

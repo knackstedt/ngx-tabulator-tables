@@ -11,6 +11,12 @@ This project is a proper Angular wrapper of [Tabulator](https://tabulator.info/)
 npm install ngx-tabulator-tables
 ```
 
+Add a tabulator stylesheet to your app.
+
+```scss
+@forward "../../node_modules/tabulator-tables/dist/css/tabulator_bootstrap5.css";
+```
+
 ### Import the module into your component
 ```ts
 import { Component } from '@angular/core';

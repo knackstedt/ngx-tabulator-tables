@@ -40,9 +40,7 @@ class TemplateWrapper {
 @Component({
     selector: 'ngx-tabulator',
     template: '',
-    styleUrls: [
-        '../../node_modules/tabulator-tables/dist/css/tabulator_simple.css'
-    ],
+    styleUrls: [ ],
     encapsulation: ViewEncapsulation.None
 })
 export class TabulatorComponent implements Omit<Tabulator, 'columnManager' | 'rowManager' | 'footerManager' | 'browser' | 'browserSlow' | 'modules' | 'element'>, Omit<Options, 'columns'> {

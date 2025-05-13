@@ -53,19 +53,7 @@ export class TabulatorComponent implements Omit<Tabulator, 'columnManager' | 'ro
 
         // TODO: this is performance hell for reasons I do not understand.
         if (this.table?.getDataCount() > 0) {
-            (async () => {
-                const container = this.table.element.querySelector(".tabulator-tableholder");
-                const initialTop = container.scrollTop;
-                const initialLeft = container.scrollLeft;
-
-                await this.table.setData(data);
-                // @ts-ignore
-                container.scrollTo({ left: initialLeft, top: initialTop + 1, behavior: "instant" });
-                setTimeout(() => {
-                    // @ts-ignore
-                    container.scrollTo({ left: initialLeft, top: initialTop, behavior: "instant" });
-                });
-            })();
+            this.table.replaceData(data);
         }
         else {
             this.table?.setData(this.dataSource);
@@ -400,6 +388,8 @@ export class TabulatorComponent implements Omit<Tabulator, 'columnManager' | 'ro
     on: Tabulator['on'];
     off: Tabulator['off'];
 
+    private finalizers: Function[] = [];
+
     constructor(
         private readonly appRef: ApplicationRef,
         private readonly viewContainer: ViewContainerRef,
@@ -412,6 +402,16 @@ export class TabulatorComponent implements Omit<Tabulator, 'columnManager' | 'ro
     }
 
     ngOnChanges(changes?: SimpleChanges): void {
+    }
+
+    ngOnDestroy() {
+        try {
+            this.finalizers?.forEach(f => f());
+        }
+        catch(err) {
+            console.warn("Failed to process all finalizers")
+            console.warn(err);
+        }
     }
 
     public render() {
@@ -492,29 +492,32 @@ export class TabulatorComponent implements Omit<Tabulator, 'columnManager' | 'ro
             obj['cellMouseUp'] = (...args) => c.onCellMouseUp?.emit([args] as any);
 
             obj['formatter'] = !c.cellTemplate ? undefined : (cell, formatterParams, onRendered) => {
-                const el = document.createElement('div');
-                const componentInstance = createComponent(TemplateWrapper, {
-                    elementInjector: this.injector,
-                    environmentInjector: this.appRef.injector,
-                    hostElement: el
-                });
-                this.appRef.attachView(componentInstance.hostView);
+                try {
+                    const el = document.createElement('div');
+                    const componentInstance = createComponent(TemplateWrapper, {
+                        elementInjector: this.injector,
+                        environmentInjector: this.appRef.injector,
+                        hostElement: el
+                    });
+                    this.appRef.attachView(componentInstance.hostView);
 
-                componentInstance.instance.template = c.cellTemplate;
-                componentInstance.instance.data = cell.getData();
+                    componentInstance.instance.template = c.cellTemplate;
+                    componentInstance.instance.data = cell.getData();
 
-                componentInstance.changeDetectorRef.detectChanges();
+                    componentInstance.changeDetectorRef.detectChanges();
 
-                const _i = setInterval(() => {
-                    if (!el.isConnected) {
-                        this.appRef.detachView(componentInstance.hostView);
-                        componentInstance.destroy();
-                        el.remove();
-                        clearInterval(_i);
-                    }
-                }, 250)
+                    this.finalizers.push(() => {
+                        this.appRef?.detachView(componentInstance?.hostView);
+                        componentInstance?.destroy();
+                        el?.remove();
+                    })
 
-                return el;
+                    return el;
+                }
+                catch(err) {
+                    console.error(err)
+                    return null;
+                }
             }
 
             return obj;

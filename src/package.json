@@ -1,6 +1,6 @@
 {
     "name": "ngx-tabulator-tables",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "repository": {
         "url": "https://github.com/knackstedt/ngx-tabulator-tables"
     },
@@ -23,10 +23,8 @@
     },
     "dependencies": {
         "tabulator-tables": ">=6.0.0",
+        "@types/tabulator-tables": ">=6.0.0",
         "tslib": ">=2.6.0"
-    },
-    "devDependencies": {
-        "@types/tabulator-tables": ">=6.0.0"
     },
     "sideEffects": false
 }

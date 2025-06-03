@@ -1,5 +1,5 @@
 import { ApplicationRef, Component, ContentChildren, createComponent, EventEmitter, Injector, Input, NgZone, Output, QueryList, SimpleChanges, TemplateRef, ViewContainerRef, ViewEncapsulation } from '@angular/core';
-import { CellComponent, ColumnDefinition, Options, RowComponent, TabulatorFull as Tabulator } from 'tabulator-tables';
+import { CellComponent, ColumnDefinition, EventCallBackMethods, Options, RowComponent, TabulatorFull as Tabulator } from 'tabulator-tables';
 import { ColumnDirective } from './column.directive';
 import { NgTemplateOutlet } from '@angular/common';
 
@@ -388,6 +388,133 @@ export class TabulatorComponent implements Omit<Tabulator, 'columnManager' | 'ro
     on: Tabulator['on'];
     off: Tabulator['off'];
 
+    validationFailed = new EventEmitter<Parameters<EventCallBackMethods['validationFailed']>>();
+    scrollHorizontal = new EventEmitter<Parameters<EventCallBackMethods['scrollHorizontal']>>();
+    scrollVertical = new EventEmitter<Parameters<EventCallBackMethods['scrollVertical']>>();
+    rowAdded = new EventEmitter<Parameters<EventCallBackMethods['rowAdded']>>();
+    rowDeleted = new EventEmitter<Parameters<EventCallBackMethods['rowDeleted']>>();
+    rowMoving = new EventEmitter<Parameters<EventCallBackMethods['rowMoving']>>();
+    rowMoved = new EventEmitter<Parameters<EventCallBackMethods['rowMoved']>>();
+    rowMoveCancelled = new EventEmitter<Parameters<EventCallBackMethods['rowMoveCancelled']>>();
+    rowUpdated = new EventEmitter<Parameters<EventCallBackMethods['rowUpdated']>>();
+    rowSelectionChanged = new EventEmitter<Parameters<EventCallBackMethods['rowSelectionChanged']>>();
+    rowSelected = new EventEmitter<Parameters<EventCallBackMethods['rowSelected']>>();
+    rowDeselected = new EventEmitter<Parameters<EventCallBackMethods['rowDeselected']>>();
+    rowResized = new EventEmitter<Parameters<EventCallBackMethods['rowResized']>>();
+    rowClick = new EventEmitter<Parameters<EventCallBackMethods['rowClick']>>();
+    rowDblClick = new EventEmitter<Parameters<EventCallBackMethods['rowDblClick']>>();
+    rowContext = new EventEmitter<Parameters<EventCallBackMethods['rowContext']>>();
+    rowTap = new EventEmitter<Parameters<EventCallBackMethods['rowTap']>>();
+    rowDblTap = new EventEmitter<Parameters<EventCallBackMethods['rowDblTap']>>();
+    rowTapHold = new EventEmitter<Parameters<EventCallBackMethods['rowTapHold']>>();
+    rowMouseEnter = new EventEmitter<Parameters<EventCallBackMethods['rowMouseEnter']>>();
+    rowMouseLeave = new EventEmitter<Parameters<EventCallBackMethods['rowMouseLeave']>>();
+    rowMouseOver = new EventEmitter<Parameters<EventCallBackMethods['rowMouseOver']>>();
+    rowMouseDown = new EventEmitter<Parameters<EventCallBackMethods['rowMouseDown']>>();
+    rowMouseUp = new EventEmitter<Parameters<EventCallBackMethods['rowMouseUp']>>();
+    rowMouseOut = new EventEmitter<Parameters<EventCallBackMethods['rowMouseOut']>>();
+    rowMouseMove = new EventEmitter<Parameters<EventCallBackMethods['rowMouseMove']>>();
+    htmlImporting = new EventEmitter<Parameters<EventCallBackMethods['htmlImporting']>>();
+    htmlImported = new EventEmitter<Parameters<EventCallBackMethods['htmlImported']>>();
+    ajaxError = new EventEmitter<Parameters<EventCallBackMethods['ajaxError']>>();
+    clipboardCopied = new EventEmitter<Parameters<EventCallBackMethods['clipboardCopied']>>();
+    clipboardPasted = new EventEmitter<Parameters<EventCallBackMethods['clipboardPasted']>>();
+    clipboardPasteError = new EventEmitter<Parameters<EventCallBackMethods['clipboardPasteError']>>();
+    downloadComplete = new EventEmitter<Parameters<EventCallBackMethods['downloadComplete']>>();
+    dataTreeRowExpanded = new EventEmitter<Parameters<EventCallBackMethods['dataTreeRowExpanded']>>();
+    dataTreeRowCollapsed = new EventEmitter<Parameters<EventCallBackMethods['dataTreeRowCollapsed']>>();
+    pageLoaded = new EventEmitter<Parameters<EventCallBackMethods['pageLoaded']>>();
+    pageSizeChanged = new EventEmitter<Parameters<EventCallBackMethods['pageSizeChanged']>>();
+    headerClick = new EventEmitter<Parameters<EventCallBackMethods['headerClick']>>();
+    headerDblClick = new EventEmitter<Parameters<EventCallBackMethods['headerDblClick']>>();
+    headerContext = new EventEmitter<Parameters<EventCallBackMethods['headerContext']>>();
+    headerTap = new EventEmitter<Parameters<EventCallBackMethods['headerTap']>>();
+    headerDblTap = new EventEmitter<Parameters<EventCallBackMethods['headerDblTap']>>();
+    headerTapHold = new EventEmitter<Parameters<EventCallBackMethods['headerTapHold']>>();
+    headerMouseUp = new EventEmitter<Parameters<EventCallBackMethods['headerMouseUp']>>();
+    headerMouseDown = new EventEmitter<Parameters<EventCallBackMethods['headerMouseDown']>>();
+    groupClick = new EventEmitter<Parameters<EventCallBackMethods['groupClick']>>();
+    groupDblClick = new EventEmitter<Parameters<EventCallBackMethods['groupDblClick']>>();
+    groupContext = new EventEmitter<Parameters<EventCallBackMethods['groupContext']>>();
+    groupTap = new EventEmitter<Parameters<EventCallBackMethods['groupTap']>>();
+    groupDblTap = new EventEmitter<Parameters<EventCallBackMethods['groupDblTap']>>();
+    groupTapHold = new EventEmitter<Parameters<EventCallBackMethods['groupTapHold']>>();
+    groupMouseDown = new EventEmitter<Parameters<EventCallBackMethods['groupMouseDown']>>();
+    groupMouseUp = new EventEmitter<Parameters<EventCallBackMethods['groupMouseUp']>>();
+    tableBuilding = new EventEmitter<Parameters<EventCallBackMethods['tableBuilding']>>();
+    tableBuilt = new EventEmitter<Parameters<EventCallBackMethods['tableBuilt']>>();
+    tableDestroyed = new EventEmitter<Parameters<EventCallBackMethods['tableDestroyed']>>();
+    dataChanged = new EventEmitter<Parameters<EventCallBackMethods['dataChanged']>>();
+    dataLoading = new EventEmitter<Parameters<EventCallBackMethods['dataLoading']>>();
+    dataLoaded = new EventEmitter<Parameters<EventCallBackMethods['dataLoaded']>>();
+    dataLoadError = new EventEmitter<Parameters<EventCallBackMethods['dataLoadError']>>();
+    dataProcessing = new EventEmitter<Parameters<EventCallBackMethods['dataProcessing']>>();
+    dataProcessed = new EventEmitter<Parameters<EventCallBackMethods['dataProcessed']>>();
+    dataFiltering = new EventEmitter<Parameters<EventCallBackMethods['dataFiltering']>>();
+    dataFiltered = new EventEmitter<Parameters<EventCallBackMethods['dataFiltered']>>();
+    dataSorting = new EventEmitter<Parameters<EventCallBackMethods['dataSorting']>>();
+    dataSorted = new EventEmitter<Parameters<EventCallBackMethods['dataSorted']>>();
+    movableRowsSendingStart = new EventEmitter<Parameters<EventCallBackMethods['movableRowsSendingStart']>>();
+    movableRowsSent = new EventEmitter<Parameters<EventCallBackMethods['movableRowsSent']>>();
+    movableRowsSentFailed = new EventEmitter<Parameters<EventCallBackMethods['movableRowsSentFailed']>>();
+    movableRowsSendingStop = new EventEmitter<Parameters<EventCallBackMethods['movableRowsSendingStop']>>();
+    movableRowsReceivingStart = new EventEmitter<Parameters<EventCallBackMethods['movableRowsReceivingStart']>>();
+    movableRowsReceived = new EventEmitter<Parameters<EventCallBackMethods['movableRowsReceived']>>();
+    movableRowsReceivedFailed = new EventEmitter<Parameters<EventCallBackMethods['movableRowsReceivedFailed']>>();
+    movableRowsReceivingStop = new EventEmitter<Parameters<EventCallBackMethods['movableRowsReceivingStop']>>();
+    movableRowsElementDrop = new EventEmitter<Parameters<EventCallBackMethods['movableRowsElementDrop']>>();
+    dataGrouping = new EventEmitter<Parameters<EventCallBackMethods['dataGrouping']>>();
+    dataGrouped = new EventEmitter<Parameters<EventCallBackMethods['dataGrouped']>>();
+    groupVisibilityChanged = new EventEmitter<Parameters<EventCallBackMethods['groupVisibilityChanged']>>();
+    localized = new EventEmitter<Parameters<EventCallBackMethods['localized']>>();
+    renderStarted = new EventEmitter<Parameters<EventCallBackMethods['renderStarted']>>();
+    renderComplete = new EventEmitter<Parameters<EventCallBackMethods['renderComplete']>>();
+    columnMoved = new EventEmitter<Parameters<EventCallBackMethods['columnMoved']>>();
+    columnResized = new EventEmitter<Parameters<EventCallBackMethods['columnResized']>>();
+    columnTitleChanged = new EventEmitter<Parameters<EventCallBackMethods['columnTitleChanged']>>();
+    columnVisibilityChanged = new EventEmitter<Parameters<EventCallBackMethods['columnVisibilityChanged']>>();
+    historyUndo = new EventEmitter<Parameters<EventCallBackMethods['historyUndo']>>();
+    historyRedo = new EventEmitter<Parameters<EventCallBackMethods['historyRedo']>>();
+    cellEditing = new EventEmitter<Parameters<EventCallBackMethods['cellEditing']>>();
+    cellEdited = new EventEmitter<Parameters<EventCallBackMethods['cellEdited']>>();
+    cellEditCancelled = new EventEmitter<Parameters<EventCallBackMethods['cellEditCancelled']>>();
+    cellClick = new EventEmitter<Parameters<EventCallBackMethods['cellClick']>>();
+    cellDblClick = new EventEmitter<Parameters<EventCallBackMethods['cellDblClick']>>();
+    cellContext = new EventEmitter<Parameters<EventCallBackMethods['cellContext']>>();
+    cellMouseDown = new EventEmitter<Parameters<EventCallBackMethods['cellMouseDown']>>();
+    cellMouseUp = new EventEmitter<Parameters<EventCallBackMethods['cellMouseUp']>>();
+    cellTap = new EventEmitter<Parameters<EventCallBackMethods['cellTap']>>();
+    cellDblTap = new EventEmitter<Parameters<EventCallBackMethods['cellDblTap']>>();
+    cellTapHold = new EventEmitter<Parameters<EventCallBackMethods['cellTapHold']>>();
+    cellMouseEnter = new EventEmitter<Parameters<EventCallBackMethods['cellMouseEnter']>>();
+    cellMouseLeave = new EventEmitter<Parameters<EventCallBackMethods['cellMouseLeave']>>();
+    cellMouseOver = new EventEmitter<Parameters<EventCallBackMethods['cellMouseOver']>>();
+    cellMouseOut = new EventEmitter<Parameters<EventCallBackMethods['cellMouseOut']>>();
+    cellMouseMove = new EventEmitter<Parameters<EventCallBackMethods['cellMouseMove']>>();
+    popupOpen = new EventEmitter<Parameters<EventCallBackMethods['popupOpen']>>();
+    popupClosed = new EventEmitter<Parameters<EventCallBackMethods['popupClosed']>>();
+    menuClosed = new EventEmitter<Parameters<EventCallBackMethods['menuClosed']>>();
+    menuOpened = new EventEmitter<Parameters<EventCallBackMethods['menuOpened']>>();
+    TooltipClosed = new EventEmitter<Parameters<EventCallBackMethods['TooltipClosed']>>();
+    TooltipOpened = new EventEmitter<Parameters<EventCallBackMethods['TooltipOpened']>>();
+    rangeAdded = new EventEmitter<Parameters<EventCallBackMethods['rangeAdded']>>();
+    rangeChanged = new EventEmitter<Parameters<EventCallBackMethods['rangeChanged']>>();
+    rangeRemoved = new EventEmitter<Parameters<EventCallBackMethods['rangeRemoved']>>();
+    rowHeightChange = new EventEmitter<Parameters<EventCallBackMethods['rowHeight']>>();
+    rowResizing = new EventEmitter<Parameters<EventCallBackMethods['rowResizing']>>();
+    columnWidth = new EventEmitter<Parameters<EventCallBackMethods['columnWidth']>>();
+    columnResizing = new EventEmitter<Parameters<EventCallBackMethods['columnResizing']>>();
+    sheetAdded = new EventEmitter<Parameters<EventCallBackMethods['sheetAdded']>>();
+    sheetLoaded = new EventEmitter<Parameters<EventCallBackMethods['sheetLoaded']>>();
+    sheetUpdated = new EventEmitter<Parameters<EventCallBackMethods['sheetUpdated']>>();
+    sheetRemoved = new EventEmitter<Parameters<EventCallBackMethods['sheetRemoved']>>();
+    columnsLoaded = new EventEmitter<Parameters<EventCallBackMethods['columnsLoaded']>>();
+    importChoose = new EventEmitter<Parameters<EventCallBackMethods['importChoose']>>();
+    importImporting = new EventEmitter<Parameters<EventCallBackMethods['importImporting']>>();
+    importError = new EventEmitter<Parameters<EventCallBackMethods['importError']>>();
+    importImported = new EventEmitter<Parameters<EventCallBackMethods['importImported']>>();
+
+
     private finalizers: Function[] = [];
 
     constructor(
@@ -409,7 +536,7 @@ export class TabulatorComponent implements Omit<Tabulator, 'columnManager' | 'ro
             this.finalizers?.forEach(f => f());
         }
         catch(err) {
-            console.warn("Failed to process all finalizers")
+            console.warn("Failed to process all finalizers");
             console.warn(err);
         }
     }
@@ -432,15 +559,11 @@ export class TabulatorComponent implements Omit<Tabulator, 'columnManager' | 'ro
             // console.log(options)
             const table = this.table = new Tabulator(this.viewContainer.element.nativeElement, options);
 
-            // table.on("rowClick", (e, row) => this.rowClick.next({ event: e, row, data: row.getData() as any }));
-            // table.on("rowContext", (e, row) => this.rowContext.next({ event: e, row, data: row.getData() as any }));
-            // table.on("rowDblClick", (e, row) => this.rowDblClick.next({ event: e, row, data: row.getData() as any }));
-            // table.on("cellClick", (e, cell) => this.cellClick.next({ event: e, cell, data: cell.getData() as any }));
-            // table.on("cellTap", (e, cell) => this.cellClick.next({ event: e, cell, data: cell.getData() as any }));
-
-            // table.on("tableBuilt", () => {
-            //     // table.redraw();
-            // });
+            // Generically bind all event emitters to the tabulator instance.
+            Object.entries(this).forEach(([k,v]) => {
+                if (!(v instanceof EventEmitter)) return;
+                table.on(k as any, (...args) => v.emit([args]));
+            })
 
             // Bind callable methods from a table instance back onto the component.
             Object.entries(table)
@@ -466,30 +589,10 @@ export class TabulatorComponent implements Omit<Tabulator, 'columnManager' | 'ro
         return this.columns.toArray().map(c => {
             const obj = getProps(c);
 
-            obj['headerClick'] = (...args) => c.onHeaderClick?.emit([args] as any);
-            obj['headerDblClick'] = (...args) => c.onHeaderDblClick?.emit([args] as any);
-            obj['headerMouseDown'] = (...args) => c.onHeaderMouseDown?.emit([args] as any);
-            obj['headerMouseUp'] = (...args) => c.onHeaderMouseUp?.emit([args] as any);
-            obj['headerContext'] = (...args) => c.onHeaderContext?.emit([args] as any);
-            obj['headerTap'] = (...args) => c.onHeaderTap?.emit([args] as any);
-            obj['headerDblTap'] = (...args) => c.onHeaderDblTap?.emit([args] as any);
-            obj['headerTapHold'] = (...args) => c.onHeaderTapHold?.emit([args] as any);
-            obj['cellClick'] = (...args) => c.onCellClick?.emit([args] as any);
-            obj['cellDblClick'] = (...args) => c.onCellDblClick?.emit([args] as any);
-            obj['cellContext'] = (...args) => c.onCellContext?.emit([args] as any);
-            obj['cellTap'] = (...args) => c.onCellTap?.emit([args] as any);
-            obj['cellDblTap'] = (...args) => c.onCellDblTap?.emit([args] as any);
-            obj['cellTapHold'] = (...args) => c.onCellTapHold?.emit([args] as any);
-            obj['cellMouseEnter'] = (...args) => c.onCellMouseEnter?.emit([args] as any);
-            obj['cellMouseLeave'] = (...args) => c.onCellMouseLeave?.emit([args] as any);
-            obj['cellMouseOver'] = (...args) => c.onCellMouseOver?.emit([args] as any);
-            obj['cellMouseOut'] = (...args) => c.onCellMouseOut?.emit([args] as any);
-            obj['cellMouseMove'] = (...args) => c.onCellMouseMove?.emit([args] as any);
-            obj['cellEditing'] = (...args) => c.onCellEditing?.emit([args] as any);
-            obj['cellEdited'] = (...args) => c.onCellEdited?.emit([args] as any);
-            obj['cellEditCancelled'] = (...args) => c.onCellEditCancelled?.emit([args] as any);
-            obj['cellMouseDown'] = (...args) => c.onCellMouseDown?.emit([args] as any);
-            obj['cellMouseUp'] = (...args) => c.onCellMouseUp?.emit([args] as any);
+            Object.entries(c).forEach(([k, v]) => {
+                if (!(v instanceof EventEmitter)) return;
+                obj[k] = (...args) => v.emit([args]);
+            })
 
             obj['formatter'] = !c.cellTemplate ? undefined : (cell, formatterParams, onRendered) => {
                 try {

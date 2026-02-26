@@ -562,7 +562,7 @@ export class TabulatorComponent implements Omit<Tabulator, 'columnManager' | 'ro
             // Generically bind all event emitters to the tabulator instance.
             Object.entries(this).forEach(([k, v]) => {
                 if (!(v instanceof EventEmitter)) return;
-                table.on(k as any, (...args) => v.emit([args]));
+                table.on(k as any, (...args) => v.emit(args));
             });
 
             // Bind callable methods from a table instance back onto the component.

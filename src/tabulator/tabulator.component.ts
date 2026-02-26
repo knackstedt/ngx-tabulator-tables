@@ -1,7 +1,7 @@
-import { ApplicationRef, Component, ContentChildren, createComponent, EventEmitter, Injector, Input, NgZone, Output, QueryList, SimpleChanges, TemplateRef, ViewContainerRef, ViewEncapsulation } from '@angular/core';
-import { CellComponent, ColumnDefinition, EventCallBackMethods, Options, RowComponent, TabulatorFull as Tabulator } from 'tabulator-tables';
-import { ColumnDirective } from './column.directive';
 import { NgTemplateOutlet } from '@angular/common';
+import { ApplicationRef, Component, ContentChildren, createComponent, EventEmitter, Injector, Input, NgZone, QueryList, SimpleChanges, TemplateRef, ViewContainerRef, ViewEncapsulation } from '@angular/core';
+import { CellComponent, EventCallBackMethods, Options, RowComponent, TabulatorFull as Tabulator } from 'tabulator-tables';
+import { ColumnDirective } from './column.directive';
 
 export type TabulatorEvent<T = any> = {
     event: any,
@@ -17,7 +17,7 @@ const getProps: <T extends {}>(obj: T) => T = (obj: any = {}) => {
         if (k.startsWith('_')) return;
         // Omit output event emitters
         if (k.startsWith('on')) return;
-        if (['tabulator','cellTemplate','headerTemplate'].includes(k)) return;
+        if (['tabulator', 'cellTemplate', 'headerTemplate'].includes(k)) return;
 
         props[k] = v;
     });
@@ -40,7 +40,7 @@ class TemplateWrapper {
 @Component({
     selector: 'ngx-tabulator',
     template: '',
-    styleUrls: [ ],
+    styleUrls: [],
     encapsulation: ViewEncapsulation.None
 })
 export class TabulatorComponent implements Omit<Tabulator, 'columnManager' | 'rowManager' | 'footerManager' | 'browser' | 'browserSlow' | 'modules' | 'element'>, Omit<Options, 'columns'> {
@@ -525,7 +525,7 @@ export class TabulatorComponent implements Omit<Tabulator, 'columnManager' | 'ro
     ) { }
 
     ngAfterViewInit() {
-        this.createTable()
+        this.createTable();
     }
 
     ngOnChanges(changes?: SimpleChanges): void {
@@ -535,7 +535,7 @@ export class TabulatorComponent implements Omit<Tabulator, 'columnManager' | 'ro
         try {
             this.finalizers?.forEach(f => f());
         }
-        catch(err) {
+        catch (err) {
             console.warn("Failed to process all finalizers");
             console.warn(err);
         }
@@ -560,20 +560,20 @@ export class TabulatorComponent implements Omit<Tabulator, 'columnManager' | 'ro
             const table = this.table = new Tabulator(this.viewContainer.element.nativeElement, options);
 
             // Generically bind all event emitters to the tabulator instance.
-            Object.entries(this).forEach(([k,v]) => {
+            Object.entries(this).forEach(([k, v]) => {
                 if (!(v instanceof EventEmitter)) return;
                 table.on(k as any, (...args) => v.emit([args]));
-            })
+            });
 
             // Bind callable methods from a table instance back onto the component.
             Object.entries(table)
-                .filter(([k,v]) => typeof v == 'function')
+                .filter(([k, v]) => typeof v == 'function')
                 .forEach(([key, value]) => {
                     this[key] = value;
-                })
+                });
 
-                // debugger;
-        })
+            // debugger;
+        });
     }
 
     private _getOptions() {
@@ -591,8 +591,10 @@ export class TabulatorComponent implements Omit<Tabulator, 'columnManager' | 'ro
 
             Object.entries(c).forEach(([k, v]) => {
                 if (!(v instanceof EventEmitter)) return;
-                obj[k] = (...args) => v.emit([args]);
-            })
+                const key = k.replace(/^on/, '');
+                const mappedKey = key.charAt(0).toLowerCase() + key.slice(1);
+                obj[mappedKey] = (...args) => v.emit([args]);
+            });
 
             obj['formatter'] = !c.cellTemplate ? undefined : (cell, formatterParams, onRendered) => {
                 try {
@@ -613,17 +615,17 @@ export class TabulatorComponent implements Omit<Tabulator, 'columnManager' | 'ro
                         this.appRef?.detachView(componentInstance?.hostView);
                         componentInstance?.destroy();
                         el?.remove();
-                    })
+                    });
 
                     return el;
                 }
-                catch(err) {
-                    console.error(err)
+                catch (err) {
+                    console.error(err);
                     return null;
                 }
-            }
+            };
 
             return obj;
-        })
+        });
     }
 }

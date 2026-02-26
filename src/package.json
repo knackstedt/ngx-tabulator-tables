@@ -22,7 +22,7 @@
         "@angular/core": ">=17.0.0"
     },
     "dependencies": {
-        "tabulator-tables": ">=6.0.0",
+        "tabulator-tables": ">=6.3.0",
         "@types/tabulator-tables": ">=6.0.0",
         "tslib": ">=2.6.0"
     },

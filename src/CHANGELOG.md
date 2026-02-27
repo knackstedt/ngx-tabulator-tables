@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.7](https://github.com/knackstedt/ngx-tabulator-tables/compare/v0.2.6...v0.2.7) (2026-02-27)
+
+
+### Bug Fixes
+
+* apply key transformer to column ([55e7c52](https://github.com/knackstedt/ngx-tabulator-tables/commit/55e7c521eb256f94557e0d8698055be5cc16644b))
+
 ### [0.2.6](https://github.com/knackstedt/ngx-tabulator-tables/compare/v0.2.5...v0.2.6) (2026-02-27)
 
 

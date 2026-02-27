@@ -561,7 +561,7 @@ export class TabulatorComponent implements Omit<Tabulator, 'columnManager' | 'ro
 
             // Generically bind all event emitters to the tabulator instance.
             Object.entries(this).forEach(([k, v]) => {
-                if (!(v instanceof EventEmitter)) return;
+                if (!(v instanceof EventEmitter) || k == 'on') return;
                 let key = k;
                 if (key.startsWith('on')) key = key.slice(2, 3).toLowerCase() + key.slice(3);
                 table.on(key as any, (...args) => v.emit(args));
@@ -584,9 +584,12 @@ export class TabulatorComponent implements Omit<Tabulator, 'columnManager' | 'ro
 
             Object.entries(c).forEach(([k, v]) => {
                 if (!(v instanceof EventEmitter)) return;
-                let key = k;
-                if (key.startsWith('on')) key = key.slice(2, 3).toLowerCase() + key.slice(3);
-                obj[key] = (...args) => v.emit(args);
+                if (k.startsWith('on')) {
+                    obj[k.slice(2, 3).toLowerCase() + k.slice(3)] = (...args) => v.emit(args);
+                }
+                else {
+                    obj[k] = (...args) => v.emit(args);
+                }
             });
 
             obj['formatter'] = !c.cellTemplate ? undefined : (cell, formatterParams, onRendered) => {

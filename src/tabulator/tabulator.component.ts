@@ -1,6 +1,6 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { ApplicationRef, Component, ContentChildren, createComponent, EventEmitter, Injector, Input, NgZone, Output, QueryList, SimpleChanges, TemplateRef, ViewContainerRef, ViewEncapsulation } from '@angular/core';
-import { CellComponent, EventCallBackMethods, Options, RowComponent, TabulatorFull as Tabulator } from 'tabulator-tables';
+import { CellComponent, EventCallBackMethods, Options, RowComponent, TabulatorFull as Tabulator, type ColumnDefinition } from 'tabulator-tables';
 import { ColumnDirective } from './column.directive';
 
 export type TabulatorEvent<T = any> = {
@@ -591,8 +591,8 @@ export class TabulatorComponent implements Omit<Tabulator, 'columnManager' | 'ro
 
             Object.entries(c).forEach(([k, v]) => {
                 if (!(v instanceof EventEmitter)) return;
-                const key = k.replace(/^on/, '');
-                const mappedKey = key.charAt(0).toLowerCase() + key.slice(1);
+
+                const mappedKey = k.charAt(0).toLowerCase() + k.slice(1);
                 obj[mappedKey] = (...args) => v.emit([args]);
             });
 
@@ -625,7 +625,7 @@ export class TabulatorComponent implements Omit<Tabulator, 'columnManager' | 'ro
                 }
             };
 
-            return obj;
+            return obj as any as ColumnDefinition;
         });
     }
 }

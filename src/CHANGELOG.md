@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.5](https://github.com/knackstedt/ngx-tabulator-tables/compare/v0.2.4...v0.2.5) (2026-02-27)
+
+
+### Bug Fixes
+
+* correct release config ([820e4be](https://github.com/knackstedt/ngx-tabulator-tables/commit/820e4bece73158bd669ade9fb241c4303d0cce55))
+* correctly reference args for column outputs ([d8f82de](https://github.com/knackstedt/ngx-tabulator-tables/commit/d8f82de7650ef9f170e68a795c5359612bf64dbd))
+* purge bad npmrc ([958cb44](https://github.com/knackstedt/ngx-tabulator-tables/commit/958cb44d505512789e04024ab0b416d6ab642bec))
+
 ### [0.2.4](https://github.com/knackstedt/ngx-tabulator-tables/compare/v0.2.3...v0.2.4) (2026-02-27)
 
 ### 0.2.3 (2026-02-27)

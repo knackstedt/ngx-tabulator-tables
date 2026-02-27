@@ -1,6 +1,6 @@
 {
     "name": "ngx-tabulator-tables",
-    "version": "0.2.4",
+    "version": "0.2.5",
     "repository": {
         "url": "git+https://github.com/knackstedt/ngx-tabulator-tables.git"
     },

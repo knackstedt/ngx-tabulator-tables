@@ -584,7 +584,9 @@ export class TabulatorComponent implements Omit<Tabulator, 'columnManager' | 'ro
 
             Object.entries(c).forEach(([k, v]) => {
                 if (!(v instanceof EventEmitter)) return;
-                obj[k] = (...args) => v.emit(args);
+                let key = k;
+                if (key.startsWith('on')) key = key.slice(2, 3).toLowerCase() + key.slice(3);
+                obj[key] = (...args) => v.emit(args);
             });
 
             obj['formatter'] = !c.cellTemplate ? undefined : (cell, formatterParams, onRendered) => {

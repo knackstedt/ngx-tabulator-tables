@@ -536,7 +536,7 @@ export class TabulatorComponent implements Omit<Tabulator, 'columnManager' | 'ro
             this.finalizers?.forEach(f => f());
         }
         catch (err) {
-            console.warn("Failed to process all finalizers");
+            console.warn("[ngx-tabulator-tables] Failed to process all finalizers");
             console.warn(err);
         }
     }
@@ -550,7 +550,7 @@ export class TabulatorComponent implements Omit<Tabulator, 'columnManager' | 'ro
             this.table?.destroy();
 
             const options: Options = {
-                ...this._getOptions(),
+                ...getProps(this),
                 columns: this._getColumns(),
                 ...this.options,
                 data: this.dataSource
@@ -562,7 +562,9 @@ export class TabulatorComponent implements Omit<Tabulator, 'columnManager' | 'ro
             // Generically bind all event emitters to the tabulator instance.
             Object.entries(this).forEach(([k, v]) => {
                 if (!(v instanceof EventEmitter)) return;
-                table.on(k as any, (...args) => v.emit(args));
+                let key = k;
+                if (key.startsWith('on')) key = key.slice(2, 3).toLowerCase() + key.slice(3);
+                table.on(key as any, (...args) => v.emit(args));
             });
 
             // Bind callable methods from a table instance back onto the component.
@@ -576,22 +578,12 @@ export class TabulatorComponent implements Omit<Tabulator, 'columnManager' | 'ro
         });
     }
 
-    private _getOptions() {
-        const obj = getProps(this);
-
-        return {
-            ...obj,
-
-        };
-    }
-
     private _getColumns() {
         return this.columns.toArray().map(c => {
             const obj = getProps(c);
 
             Object.entries(c).forEach(([k, v]) => {
                 if (!(v instanceof EventEmitter)) return;
-
                 obj[k] = (...args) => v.emit(args);
             });
 

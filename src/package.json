@@ -2,7 +2,11 @@
     "name": "ngx-tabulator-tables",
     "version": "0.2.3",
     "repository": {
-        "url": "https://github.com/knackstedt/ngx-tabulator-tables"
+        "url": "git+https://github.com/knackstedt/ngx-tabulator-tables.git"
+    },
+    "publishConfig": {
+        "access": "public",
+        "provenance": true
     },
     "license": "MIT",
     "author": {

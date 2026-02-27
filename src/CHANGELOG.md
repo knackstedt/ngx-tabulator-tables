@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.6](https://github.com/knackstedt/ngx-tabulator-tables/compare/v0.2.5...v0.2.6) (2026-02-27)
+
+
+### Bug Fixes
+
+* force overwrite keys transformed by angular build in latest version ([9b6913a](https://github.com/knackstedt/ngx-tabulator-tables/commit/9b6913aab1b179c22fc2f94690fa2208a65a9763))
+
 ### [0.2.5](https://github.com/knackstedt/ngx-tabulator-tables/compare/v0.2.4...v0.2.5) (2026-02-27)
 
 

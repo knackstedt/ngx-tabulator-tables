@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.4](https://github.com/knackstedt/ngx-tabulator-tables/compare/v0.2.3...v0.2.4) (2026-02-27)
+
 ### 0.2.3 (2026-02-27)
 
 

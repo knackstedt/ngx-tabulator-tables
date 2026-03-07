@@ -1,4 +1,4 @@
-import { ContentChild, Directive, EventEmitter, Input, Output, TemplateRef } from '@angular/core';
+import { ContentChild, Directive, EventEmitter, Input, OnChanges, Output, SimpleChanges, TemplateRef } from '@angular/core';
 import { ColumnDefinition } from 'tabulator-tables';
 import { TabulatorComponent } from './tabulator.component';
 
@@ -7,7 +7,7 @@ type OutputKeys = 'headerClick' | 'headerDblClick' | 'headerMouseDown' | 'header
 @Directive({
     selector: 'ngx-tabulator>ngx-tabulator-column'
 })
-export class ColumnDirective implements Omit<ColumnDefinition, OutputKeys> {
+export class ColumnDirective implements OnChanges, Omit<ColumnDefinition, OutputKeys> {
 
     @Input() accessorClipboard: ColumnDefinition['accessorClipboard'];
     @Input() accessor: ColumnDefinition['accessor'];
@@ -139,7 +139,38 @@ export class ColumnDirective implements Omit<ColumnDefinition, OutputKeys> {
     // @ContentChild(TemplateRef) template2: TemplateRef<any>;
 
     constructor(private readonly tabulator: TabulatorComponent) { }
-    ngOnChanges() {
-        this.tabulator.ngOnChanges();
+
+    ngOnChanges(changes: SimpleChanges): void {
+        if (!this.tabulator.table) return;
+
+        // Properties that can be updated dynamically via updateColumnDefinition
+        const updatableProps = new Set([
+            'title', 'visible', 'width', 'minWidth', 'maxWidth', 'resizable',
+            'frozen', 'cssClass', 'hozAlign', 'vertAlign', 'headerHozAlign',
+            'editableTitle', 'headerSort', 'headerWordWrap', 'headerVertical',
+            'headerTooltip', 'headerFilterPlaceholder', 'editorEmptyValue'
+        ]);
+
+        // Check if we can use updateColumnDefinition (requires field to identify column)
+        const changedKeys = Object.keys(changes).filter(key => !changes[key].firstChange);
+        const hasField = !!this.field;
+
+        if (hasField && changedKeys.length > 0) {
+            const canUpdateDynamically = changedKeys.every(key => updatableProps.has(key));
+
+            if (canUpdateDynamically) {
+                // Use efficient update for simple property changes
+                changedKeys.forEach(key => {
+                    const def: Partial<ColumnDefinition> = { [key]: changes[key].currentValue };
+                    this.tabulator.table.updateColumnDefinition(this.field, def as ColumnDefinition);
+                });
+                return;
+            }
+        }
+
+        // Fall back to full table recreation for complex changes (formatters, field, etc.)
+        if (changedKeys.length > 0) {
+            this.tabulator.ngOnChanges();
+        }
     }
 }

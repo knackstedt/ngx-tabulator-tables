@@ -529,6 +529,95 @@ export class TabulatorComponent implements Omit<Tabulator, 'columnManager' | 'ro
     }
 
     ngOnChanges(changes?: SimpleChanges): void {
+        if (!this.table) return;
+
+        // If called without changes (e.g., from column directive), recreate table
+        if (!changes) {
+            this.createTable();
+            return;
+        }
+
+        // Track which keys we handle explicitly
+        const handledKeys = new Set([
+            'height', 'layout', 'placeholder', 'headerVisible', 'columnDefaults',
+            'pagination', 'paginationSize', 'groupBy', 'groupHeader',
+            'initialSort', 'initialFilter', 'textDirection', 'locale'
+        ]);
+
+        // Check if any unhandled option changed
+        const unhandledChanges = Object.keys(changes).filter(key => {
+            // Skip if already handled, is first change, or is internal property
+            if (handledKeys.has(key)) return false;
+            if (changes[key].firstChange) return false;
+            if (key.startsWith('_')) return false; // internal properties
+            if (key === 'table' || key === 'columns' || key === 'options' || key === 'dataSource') return false;
+            return true;
+        });
+
+        // If unhandled options changed, recreate the table
+        if (unhandledChanges.length > 0) {
+            this.createTable();
+            return;
+        }
+
+        // Handle height changes
+        if (changes['height'] && !changes['height'].firstChange) {
+            this.table.setHeight(changes['height'].currentValue);
+        }
+
+        // Handle layout changes
+        if (changes['layout'] && !changes['layout'].firstChange) {
+            this.table.redraw(true);
+        }
+
+        // Handle placeholder changes
+        if (changes['placeholder'] && !changes['placeholder'].firstChange) {
+            this.table.setData(this.dataSource);
+        }
+
+        // Handle header visibility changes
+        if (changes['headerVisible'] && !changes['headerVisible'].firstChange) {
+            this.table.setColumns(this._getColumns());
+        }
+
+        // Handle column defaults changes
+        if (changes['columnDefaults'] && !changes['columnDefaults'].firstChange) {
+            this.table.setColumns(this._getColumns());
+        }
+
+        // Handle pagination changes
+        if ((changes['pagination'] || changes['paginationSize']) && !changes['pagination']?.firstChange && !changes['paginationSize']?.firstChange) {
+            this.table.setPageSize(changes['paginationSize']?.currentValue ?? this.paginationSize);
+        }
+
+        // Handle grouping changes
+        if (changes['groupBy'] && !changes['groupBy'].firstChange) {
+            this.table.setGroupBy(changes['groupBy'].currentValue);
+        }
+
+        if (changes['groupHeader'] && !changes['groupHeader'].firstChange) {
+            this.table.setGroupHeader(changes['groupHeader'].currentValue);
+        }
+
+        // Handle sort changes
+        if (changes['initialSort'] && !changes['initialSort'].firstChange) {
+            this.table.setSort(changes['initialSort'].currentValue);
+        }
+
+        // Handle filter changes
+        if (changes['initialFilter'] && !changes['initialFilter'].firstChange) {
+            this.table.setFilter(changes['initialFilter'].currentValue);
+        }
+
+        // Handle text direction changes
+        if (changes['textDirection'] && !changes['textDirection'].firstChange) {
+            this.table.redraw(true);
+        }
+
+        // Handle locale changes
+        if (changes['locale'] && !changes['locale'].firstChange) {
+            this.table.setLocale(changes['locale'].currentValue);
+        }
     }
 
     ngOnDestroy() {

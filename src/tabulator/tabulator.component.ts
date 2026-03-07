@@ -48,10 +48,13 @@ export class TabulatorComponent implements Omit<Tabulator, 'columnManager' | 'ro
     @ContentChildren(ColumnDirective) columns: QueryList<ColumnDirective>;
 
     private _dataSource = [];
+    private _tableInitialized = false;
     @Input() set dataSource(data: Object[]) {
         this._dataSource = data;
 
-        // TODO: this is performance hell for reasons I do not understand.
+        // Only update data if table is fully initialized (prevents HMR issues)
+        if (!this._tableInitialized) return;
+
         if (this.table?.getDataCount() > 0) {
             this.table.replaceData(data);
         }
@@ -636,6 +639,7 @@ export class TabulatorComponent implements Omit<Tabulator, 'columnManager' | 'ro
 
     private createTable() {
         this.ngZone.runOutsideAngular(() => {
+            this._tableInitialized = false;
             this.table?.destroy();
 
             const options: Options = {
@@ -662,6 +666,11 @@ export class TabulatorComponent implements Omit<Tabulator, 'columnManager' | 'ro
                 .forEach(([key, value]) => {
                     this[key] = value;
                 });
+
+            // Mark table as initialized after tableBuilt event
+            table.on('tableBuilt', () => {
+                this._tableInitialized = true;
+            });
 
             // debugger;
         });

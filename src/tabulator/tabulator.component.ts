@@ -667,7 +667,7 @@ export class TabulatorComponent implements Omit<Tabulator, 'columnManager' | 'ro
         });
     }
 
-    private _getColumns() {
+    public _getColumns() {
         return this.columns.toArray().map(c => {
             const obj = getProps(c);
 

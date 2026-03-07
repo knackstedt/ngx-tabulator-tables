@@ -143,17 +143,28 @@ export class ColumnDirective implements OnChanges, Omit<ColumnDefinition, Output
     ngOnChanges(changes: SimpleChanges): void {
         if (!this.tabulator.table) return;
 
+        const changedKeys = Object.keys(changes).filter(key => !changes[key].firstChange);
+        if (changedKeys.length === 0) return;
+
+        const hasField = !!this.field;
+
+        // Handle visibility changes with direct showColumn/hideColumn API
+        if (hasField && changedKeys.length === 1 && changedKeys[0] === 'visible') {
+            if (changes['visible'].currentValue) {
+                this.tabulator.table.showColumn(this.field);
+            } else {
+                this.tabulator.table.hideColumn(this.field);
+            }
+            return;
+        }
+
         // Properties that can be updated dynamically via updateColumnDefinition
         const updatableProps = new Set([
-            'title', 'visible', 'width', 'minWidth', 'maxWidth', 'resizable',
+            'title', 'width', 'minWidth', 'maxWidth', 'resizable',
             'frozen', 'cssClass', 'hozAlign', 'vertAlign', 'headerHozAlign',
             'editableTitle', 'headerSort', 'headerWordWrap', 'headerVertical',
             'headerTooltip', 'headerFilterPlaceholder', 'editorEmptyValue'
         ]);
-
-        // Check if we can use updateColumnDefinition (requires field to identify column)
-        const changedKeys = Object.keys(changes).filter(key => !changes[key].firstChange);
-        const hasField = !!this.field;
 
         if (hasField && changedKeys.length > 0) {
             const canUpdateDynamically = changedKeys.every(key => updatableProps.has(key));
@@ -168,9 +179,7 @@ export class ColumnDirective implements OnChanges, Omit<ColumnDefinition, Output
             }
         }
 
-        // Fall back to full table recreation for complex changes (formatters, field, etc.)
-        if (changedKeys.length > 0) {
-            this.tabulator.ngOnChanges();
-        }
+        // Update all columns when complex changes occur
+        this.tabulator.table.setColumns(this.tabulator._getColumns());
     }
 }

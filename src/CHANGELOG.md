@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.2](https://github.com/knackstedt/ngx-tabulator-tables/compare/v0.3.1...v0.3.2) (2026-03-07)
+
+
+### Bug Fixes
+
+* attempt to correct an intermittent HMR error ([8a31bd3](https://github.com/knackstedt/ngx-tabulator-tables/commit/8a31bd3757ab7507c9e0d160bf6cee20b7c3d310))
+
 ### [0.3.1](https://github.com/knackstedt/ngx-tabulator-tables/compare/v0.3.0...v0.3.1) (2026-03-07)
 
 

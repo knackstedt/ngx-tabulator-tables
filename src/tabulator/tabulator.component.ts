@@ -50,6 +50,9 @@ export class TabulatorComponent implements Omit<Tabulator, 'columnManager' | 'ro
     private _dataSource = [];
     private _tableInitialized = false;
     @Input() set dataSource(data: Object[]) {
+        // Skip if data reference hasn't changed (prevents unnecessary redraws)
+        if (this._dataSource === data) return;
+
         this._dataSource = data;
 
         // Only update data if table is fully initialized (prevents HMR issues)
@@ -540,25 +543,34 @@ export class TabulatorComponent implements Omit<Tabulator, 'columnManager' | 'ro
             return;
         }
 
+        // Early exit if only dataSource changed (handled by setter)
+        const changeKeys = Object.keys(changes);
+        if (changeKeys.length === 1 && changeKeys[0] === 'dataSource') {
+            return;
+        }
+
         // Track which keys we handle explicitly
         const handledKeys = new Set([
             'height', 'layout', 'placeholder', 'headerVisible', 'columnDefaults',
             'pagination', 'paginationSize', 'groupBy', 'groupHeader',
-            'initialSort', 'initialFilter', 'textDirection', 'locale'
+            'initialSort', 'initialFilter', 'textDirection', 'locale', 'dataSource'
         ]);
 
-        // Check if any unhandled option changed
-        const unhandledChanges = Object.keys(changes).filter(key => {
+        // Check if any unhandled option changed (optimized)
+        let hasUnhandledChanges = false;
+        for (const key of changeKeys) {
             // Skip if already handled, is first change, or is internal property
-            if (handledKeys.has(key)) return false;
-            if (changes[key].firstChange) return false;
-            if (key.startsWith('_')) return false; // internal properties
-            if (key === 'table' || key === 'columns' || key === 'options' || key === 'dataSource') return false;
-            return true;
-        });
+            if (handledKeys.has(key)) continue;
+            if (changes[key].firstChange) continue;
+            if (key.startsWith('_')) continue; // internal properties
+            if (key === 'table' || key === 'columns' || key === 'options') continue;
+
+            hasUnhandledChanges = true;
+            break;
+        }
 
         // If unhandled options changed, recreate the table
-        if (unhandledChanges.length > 0) {
+        if (hasUnhandledChanges) {
             this.createTable();
             return;
         }
@@ -575,7 +587,7 @@ export class TabulatorComponent implements Omit<Tabulator, 'columnManager' | 'ro
 
         // Handle placeholder changes
         if (changes['placeholder'] && !changes['placeholder'].firstChange) {
-            this.table.setData(this.dataSource);
+            this.table.redraw();
         }
 
         // Handle header visibility changes
@@ -589,8 +601,10 @@ export class TabulatorComponent implements Omit<Tabulator, 'columnManager' | 'ro
         }
 
         // Handle pagination changes
-        if ((changes['pagination'] || changes['paginationSize']) && !changes['pagination']?.firstChange && !changes['paginationSize']?.firstChange) {
-            this.table.setPageSize(changes['paginationSize']?.currentValue ?? this.paginationSize);
+        if (changes['paginationSize'] && !changes['paginationSize'].firstChange) {
+            this.table.setPageSize(changes['paginationSize'].currentValue);
+        } else if (changes['pagination'] && !changes['pagination'].firstChange) {
+            this.table.setPageSize(this.paginationSize);
         }
 
         // Handle grouping changes
